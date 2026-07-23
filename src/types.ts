@@ -15,6 +15,13 @@ export type ViewState = 'poster' | 'uploaded';
 
 export type PaymentMethod = 'Bkash' | 'Nagad' | 'Rocket';
 
+export interface PaymentMethodInfo {
+  name: string;
+  number: string;
+  logo: string;
+  color: string;
+}
+
 export interface AppSettings {
   paymentMethod: PaymentMethod;
   amount: string;
@@ -26,4 +33,5 @@ export interface AppSettings {
     intervalMinutes: number;
     methodPattern: 'alternating' | 'random';
   };
+  paymentMethods: PaymentMethodInfo[];
 }

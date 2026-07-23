@@ -36,7 +36,7 @@ export default function CountdownTimer({ isActive }: CountdownTimerProps) {
       whileDrag={{ scale: 1.05, cursor: 'grabbing' }}
       initial={{ opacity: 0, scale: 0.8, y: -20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      className="flex items-center gap-6 px-7 py-4 bg-[#05070A]/90 backdrop-blur-3xl rounded-[2.5rem] border border-blue-500/30 shadow-[0_0_50px_rgba(59,130,246,0.3),0_25px_60px_rgba(0,0,0,0.8)] group cursor-grab active:cursor-grabbing z-[200] relative overflow-hidden"
+      className="flex items-center gap-3 px-4 py-2 bg-[#05070A]/90 backdrop-blur-3xl rounded-[1.5rem] border border-blue-500/30 shadow-[0_0_30px_rgba(59,130,246,0.2),0_15px_40px_rgba(0,0,0,0.8)] group cursor-grab active:cursor-grabbing z-[200] relative overflow-hidden"
     >
       {/* HUD Holographic Grid Background */}
       <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#3b82f6_0.5px,transparent_0.5px)] bg-[size:4px_4px] pointer-events-none" />
@@ -47,14 +47,13 @@ export default function CountdownTimer({ isActive }: CountdownTimerProps) {
         transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         className="absolute inset-0 bg-gradient-to-b from-transparent via-blue-400/10 to-transparent pointer-events-none"
       />
-
-      <div className="flex items-center gap-4 relative z-10">
+      <div className="flex items-center gap-2 relative z-10">
         <div className="relative flex items-center justify-center">
-          <div className={`w-3 h-3 rounded-full transition-all duration-500 ${
-            timeLeft < 300 ? 'bg-red-500 shadow-[0_0_15px_#ef4444]' : 'bg-cyan-400 shadow-[0_0_15px_#22d3ee]'
+          <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+            timeLeft < 300 ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-cyan-400 shadow-[0_0_10px_#22d3ee]'
           }`} />
           <motion.div 
-            animate={{ scale: [1, 2.2, 1], opacity: [0.2, 0.5, 0.2] }}
+            animate={{ scale: [1, 2, 1], opacity: [0.2, 0.4, 0.2] }}
             transition={{ duration: 1.5, repeat: Infinity }}
             className={`absolute inset-0 rounded-full blur-md ${
               timeLeft < 300 ? 'bg-red-500' : 'bg-cyan-400'
@@ -64,25 +63,22 @@ export default function CountdownTimer({ isActive }: CountdownTimerProps) {
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-2 border border-blue-500/10 rounded-full border-t-blue-500/40"
+            className="absolute -inset-1 border border-blue-500/10 rounded-full border-t-blue-500/40"
           />
         </div>
         <div className="flex flex-col">
-          <span className="text-[10px] font-black text-blue-300 uppercase tracking-[0.4em] leading-none mb-1">Session Node</span>
-          <div className="flex items-center gap-1.5">
+          <span className="text-[8px] font-black text-blue-300 uppercase tracking-[0.3em] leading-none mb-0.5">Session</span>
+          <div className="flex items-center gap-1">
             <div className="w-1 h-1 rounded-full bg-blue-500/40" />
-            <span className="text-[7.5px] text-blue-500/60 uppercase font-bold tracking-[0.15em]">Secure Matrix Link</span>
+            <span className="text-[6px] text-blue-500/60 uppercase font-bold tracking-[0.1em]">Secure</span>
           </div>
         </div>
       </div>
 
-      <div className="w-[1.5px] h-8 bg-gradient-to-b from-transparent via-blue-500/40 to-transparent relative z-10" />
+      <div className="w-[1px] h-5 bg-gradient-to-b from-transparent via-blue-500/40 to-transparent relative z-10" />
 
-      <div className="relative z-10 pl-2">
-        <div className="absolute -top-3 -right-2 px-1.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20">
-           <span className="text-[7px] font-black text-blue-400 uppercase tracking-widest">Active</span>
-        </div>
-        <span className={`text-2xl font-mono font-black tabular-nums tracking-[0.2em] drop-shadow-[0_0_15px_rgba(59,130,246,0.6)] ${
+      <div className="relative z-10 pl-1">
+        <span className={`text-xl font-mono font-black tabular-nums tracking-[0.15em] drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] ${
           timeLeft < 300 ? 'text-red-400 animate-pulse' : 'text-white'
         }`}>
           {formatTime(timeLeft)}

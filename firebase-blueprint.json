@@ -23,7 +23,8 @@
         "senderNumber": { "type": "string" },
         "isTimerActive": { "type": "boolean" },
         "showLiveIntelligence": { "type": "boolean" },
-        "autoPayment": { "type": "object" }
+        "autoPayment": { "type": "object" },
+        "paymentMethods": { "type": "array" }
       }
     }
   }

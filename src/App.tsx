@@ -1,13 +1,14 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Settings, Wifi, Battery, Sparkles } from 'lucide-react';
-import { collection, addDoc, onSnapshot, query, orderBy, limit, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, onSnapshot, query, orderBy, limit, doc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './lib/firebase';
 import SettingsPanel from './components/SettingsPanel';
 import NotificationManager from './components/NotificationManager';
 import CountdownTimer from './components/CountdownTimer';
 import AtmosphericEffects from './components/AtmosphericEffects';
 import RightSidebar from './components/RightSidebar';
+import PaymentPoster from './components/PaymentPoster';
 import { Notification, ViewState, AppSettings } from './types';
 
 // Image paths from generation
@@ -95,7 +96,11 @@ export default function App() {
   const handleUpdateSettings = useCallback(async (newSettings: AppSettings) => {
     setSettings(newSettings);
     try {
-      await setDoc(doc(db, 'settings', 'global'), newSettings, { merge: true });
+      // Ensure we are saving the complete settings object including paymentMethods
+      await setDoc(doc(db, 'settings', 'global'), {
+        ...newSettings,
+        lastUpdated: serverTimestamp()
+      }, { merge: true });
     } catch (err) {
       console.error('Failed to update settings in Firebase:', err);
     }
@@ -112,6 +117,13 @@ export default function App() {
       intervalMinutes: 2,
       methodPattern: 'alternating',
     },
+    paymentMethods: [
+      { name: 'Bkash', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/B/bkash-logo-FBB258C90F-seeklogo.com.png', color: '#E2136E' },
+      { name: 'Nagad', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/N/nagad-logo-7A70BBDA73-seeklogo.com.png', color: '#F34F22' },
+      { name: 'Rocket', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/D/dutch-bangla-rocket-logo-B4D1CC458D-seeklogo.com.png', color: '#8C3494' },
+      { name: 'Upay', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/U/upay-logo-F2B8D24F3A-seeklogo.com.png', color: '#FFD700' },
+      { name: 'Tap', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/T/tap-logo-8A1C4C5C5C-seeklogo.com.png', color: '#00A1E1' },
+    ],
   });
 
   // Dynamic Intelligence Metrics State
@@ -233,37 +245,60 @@ export default function App() {
           className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.05)_1px,transparent_1px)] bg-[size:100%_60px] opacity-20"
         />
 
-        {/* Radiant Blue Plasma Orbs */}
+        {/* Primary Atmosphere Glows */}
         <motion.div
           animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2],
             x: [-30, 30, -30],
           }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -top-[15%] -left-[10%] w-[85%] h-[85%] bg-blue-600 rounded-full blur-[180px]"
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[10%] -left-[5%] w-[90%] h-[90%] bg-blue-600/30 rounded-full blur-[200px]"
         />
         <motion.div
           animate={{
-            scale: [1.1, 1, 1.1],
-            opacity: [0.1, 0.2, 0.1],
-            x: [30, -30, 30],
+            scale: [1.3, 1, 1.3],
+            opacity: [0.15, 0.3, 0.15],
+            x: [50, -50, 50],
           }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -bottom-[20%] -right-[15%] w-[75%] h-[75%] bg-indigo-500 rounded-full blur-[160px]"
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -bottom-[15%] -right-[10%] w-[80%] h-[80%] bg-indigo-600/20 rounded-full blur-[180px]"
         />
 
+        {/* Central Core Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-blue-500/10 rounded-full blur-[250px] pointer-events-none" />
+
         {/* Digital Grid Interface */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,102,255,0.04)_1.5px,transparent_1.5px),linear-gradient(90deg,rgba(0,102,255,0.04)_1.5px,transparent_1.5px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_75%_65%_at_50%_50%,#000_65%,transparent_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,102,255,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(0,102,255,0.08)_1px,transparent_1px)] bg-[size:80px_80px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_70%,transparent_100%)] opacity-40" />
         
         {/* Shimmering Scanline Effect */}
         <motion.div
           animate={{ y: ["-100%", "200%"] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-transparent via-blue-400/[0.06] to-transparent h-[40%] w-full"
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-transparent via-blue-400/[0.12] to-transparent h-[30%] w-full"
         />
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000205_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000103_100%)]" />
+
+        {/* Atmospheric Flickering Lights */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+          <motion.div 
+            animate={{ 
+              opacity: [0.1, 0.3, 0.1],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[10%] left-[15%] w-[40%] h-[40%] bg-blue-400/20 blur-[150px] rounded-full"
+          />
+          <motion.div 
+            animate={{ 
+              opacity: [0.05, 0.2, 0.05],
+              scale: [1.5, 1, 1.5],
+            }}
+            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            className="absolute bottom-[20%] right-[20%] w-[35%] h-[35%] bg-blue-600/15 blur-[120px] rounded-full"
+          />
+        </div>
       </div>
 
       {/* Main Container */}
@@ -279,13 +314,12 @@ export default function App() {
             
             {/* Top Navigation HUD Bar */}
             <div className="h-20 bg-blue-500/[0.03] border-b border-blue-500/10 flex items-center justify-between px-6 md:px-10 z-50">
-              <div className="flex items-center gap-12">
+              <div className="flex items-center gap-8">
                 <div className="flex gap-3">
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-500/50 shadow-[0_0_10px_rgba(59,130,246,0.6)]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-500/30 shadow-[0_0_8px_rgba(59,130,246,0.3)]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-blue-500/10" />
                 </div>
-                <h1 className="text-[12px] font-black text-blue-400/40 tracking-[0.7em] uppercase hidden md:block">Unity Earning Control Interface</h1>
               </div>
               
               <div className="flex items-center gap-8 text-blue-400/40">
@@ -297,17 +331,21 @@ export default function App() {
                       const randomPhone = `01${Math.floor(100000000 + Math.random() * 900000000)}`;
                       broadcastNotification(`Payment Received. From ${randomPhone}. Amount: Tk ${settings.amount}. Method: ${settings.paymentMethod}. at ${date} ${time}`, 'success');
                     }}
-                    className="w-2.5 h-2.5 rounded-full bg-green-500/20 hover:bg-green-500/60 transition-all cursor-pointer border border-green-500/10"
+                    className="w-5 h-5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/40 transition-all cursor-pointer border border-emerald-500/20 flex items-center justify-center group/btn shadow-[0_0_15px_rgba(34,197,94,0.05)]"
                     title="Simulate Payment"
-                  />
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 group-hover/btn:bg-emerald-400 group-hover/btn:scale-125 transition-all" />
+                  </button>
                   <button 
                     onClick={() => {
                       const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                       broadcastNotification(`🎉 Student ID Activated Successfully at ${time}`, 'info');
                     }}
-                    className="w-2.5 h-2.5 rounded-full bg-red-500/20 hover:bg-red-500/60 transition-all cursor-pointer border border-red-500/10"
+                    className="w-5 h-5 rounded-lg bg-blue-500/10 hover:bg-blue-500/40 transition-all cursor-pointer border border-blue-500/20 flex items-center justify-center group/btn shadow-[0_0_15px_rgba(59,130,246,0.05)]"
                     title="Simulate Activation"
-                  />
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500/40 group-hover/btn:bg-blue-400 group-hover/btn:scale-125 transition-all" />
+                  </button>
                 </div>
 
                 <div className="flex items-center gap-3 px-5 py-2 bg-blue-500/5 rounded-2xl border border-blue-500/10 group transition-all hover:bg-blue-500/10">
@@ -327,7 +365,7 @@ export default function App() {
             {/* Content Layout - Split into Left Sidebar, Center, and Right Sidebar */}
             <div className="flex-1 relative flex overflow-hidden">
               {/* Left Side: Dynamic Payment Node Stream - Hugs Left Border */}
-              <div className="w-64 xl:w-72 bg-blue-900/10 border-r border-blue-500/20 relative overflow-hidden hidden lg:flex flex-col flex-shrink-0">
+              <div className="w-56 xl:w-60 bg-blue-900/10 border-r border-blue-500/20 relative overflow-hidden hidden lg:flex flex-col flex-shrink-0">
                 {/* Holographic Sidebar Scanline */}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.1)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none z-20" />
                 
@@ -406,10 +444,10 @@ export default function App() {
                         </div>
                         
                         <div className="flex flex-col gap-0.5 overflow-hidden">
-                          <span className="text-[13px] font-black text-white/85 group-hover:text-blue-300 transition-colors uppercase tracking-[0.05em] leading-none truncate">{node.name}</span>
+                          <span className="text-[14px] font-black text-white/95 group-hover:text-blue-300 transition-colors uppercase tracking-[0.05em] leading-none truncate">{node.name}</span>
                           <div className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-                            <span className="text-[9px] text-blue-400/50 uppercase font-black tracking-[0.1em]">Stream Link</span>
+                            <span className="text-[10px] text-blue-400/60 uppercase font-black tracking-[0.1em]">Stream Link</span>
                           </div>
                         </div>
 
@@ -425,7 +463,7 @@ export default function App() {
               <div className="flex-1 relative flex items-center justify-center p-2 md:p-4 bg-gradient-to-br from-blue-900/[0.03] to-transparent overflow-hidden">
                 
                 {/* Left Notifications Layer - Higher z-index, positioned above methods */}
-                <div className="absolute left-4 top-24 z-[100] flex flex-col gap-2 pointer-events-none w-72">
+                <div className="absolute left-2 top-4 z-[100] flex flex-col gap-2 pointer-events-none w-64">
                   <NotificationManager 
                     notifications={notifications} 
                     removeNotification={removeNotification} 
@@ -434,7 +472,7 @@ export default function App() {
                 </div>
 
                 {/* Right Notifications Layer - Higher z-index, positioned for identity info */}
-                <div className="absolute right-4 top-24 z-[100] flex flex-col gap-2 pointer-events-none w-72">
+                <div className="absolute right-2 top-4 z-[100] flex flex-col gap-2 pointer-events-none w-64">
                   <NotificationManager 
                     notifications={notifications} 
                     removeNotification={removeNotification} 
@@ -471,20 +509,27 @@ export default function App() {
                     <motion.div
                       key={viewState}
                       initial={{ scale: 0.95, opacity: 0 }}
-                      animate={{ scale: 1.04, opacity: 1 }}
+                      animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                      className="relative w-full h-full flex items-center justify-center"
+                      className="relative w-full h-full flex items-center justify-center p-0.5 md:p-1"
                     >
                       <div className="relative group w-full h-full flex items-center justify-center">
                         {/* Dramatic Ambient Glow behind image */}
-                        <div className="absolute inset-0 bg-blue-500/10 blur-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1500" />
+                        <div className="absolute inset-0 bg-orange-500/5 blur-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1500" />
                         
-                        <img
-                          src={viewState === 'uploaded' && uploadedImageUrl ? uploadedImageUrl : POSTER_IMAGE}
-                          alt="Interface Node"
-                          className="max-w-[92%] max-h-[92%] w-auto h-auto object-contain rounded-[32px] md:rounded-[40px] shadow-[0_100px_200px_-50px_rgba(0,0,0,1),0_0_60px_rgba(59,130,246,0.15)] border border-white/[0.03] transition-all duration-1000 group-hover:scale-[1.015] group-hover:border-blue-500/30"
-                          referrerPolicy="no-referrer"
-                        />
+                        {viewState === 'poster' ? (
+                          <div className="w-full h-full max-w-[98%] max-h-[98%] flex items-center justify-center drop-shadow-[0_60px_120px_rgba(0,0,0,0.8)]">
+                            <PaymentPoster settings={settings} />
+                          </div>
+                        ) : (
+
+                          <img
+                            src={viewState === 'uploaded' && uploadedImageUrl ? uploadedImageUrl : POSTER_IMAGE}
+                            alt="Interface Node"
+                            className="max-w-full max-h-full w-auto h-auto object-contain rounded-[32px] md:rounded-[40px] shadow-[0_100px_200px_-50px_rgba(0,0,0,1),0_0_60px_rgba(59,130,246,0.15)] border border-white/[0.03] transition-all duration-1000 group-hover:scale-[1.015] group-hover:border-blue-500/30"
+                            referrerPolicy="no-referrer"
+                          />
+                        )}
 
                         {/* Overlay Reflection */}
                         <div className="absolute inset-0 rounded-[40px] pointer-events-none bg-gradient-to-tr from-white/[0.01] via-transparent to-transparent opacity-50" />
@@ -515,7 +560,7 @@ export default function App() {
       </div>
 
       {/* Floating Draggable Timer */}
-      <div className="fixed top-32 left-1/2 -translate-x-1/2 z-[200]">
+      <div className="fixed top-4 left-4 z-[200]">
         <CountdownTimer isActive={settings.isTimerActive} />
       </div>
     </main>

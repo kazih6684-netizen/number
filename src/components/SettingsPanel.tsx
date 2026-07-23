@@ -248,6 +248,103 @@ export default function SettingsPanel({
             </button>
           </div>
         </section>
+
+        <section className="space-y-4 mt-2 pb-20">
+          <h3 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] opacity-80">Poster Config</h3>
+          <div className="flex flex-col gap-4">
+            {settings.paymentMethods.map((method, idx) => (
+              <div key={idx} className="p-4 bg-blue-500/5 rounded-2xl border border-blue-500/10 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Method {idx + 1}</span>
+                  <div className="w-2 h-2 rounded-full" style={{ backgroundColor: method.color }} />
+                </div>
+                
+                <div className="space-y-1">
+                  <label className="text-[8px] text-blue-400/40 uppercase tracking-widest pl-1">Name</label>
+                  <input
+                    type="text"
+                    value={method.name}
+                    onChange={(e) => {
+                      const newMethods = [...settings.paymentMethods];
+                      newMethods[idx] = { ...method, name: e.target.value };
+                      onUpdateSettings({ ...settings, paymentMethods: newMethods });
+                    }}
+                    className="w-full bg-[#05070A] border border-blue-500/10 rounded-lg py-1.5 px-3 text-xs text-white focus:outline-none focus:border-blue-500/50"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[8px] text-blue-400/40 uppercase tracking-widest pl-1">Number</label>
+                  <input
+                    type="text"
+                    value={method.number}
+                    onChange={(e) => {
+                      const newMethods = [...settings.paymentMethods];
+                      newMethods[idx] = { ...method, number: e.target.value };
+                      onUpdateSettings({ ...settings, paymentMethods: newMethods });
+                    }}
+                    className="w-full bg-[#05070A] border border-blue-500/10 rounded-lg py-1.5 px-3 text-xs text-white focus:outline-none focus:border-blue-500/50"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between pl-1">
+                    <label className="text-[8px] text-blue-400/40 uppercase tracking-widest">Logo Configuration</label>
+                  </div>
+                  
+                  <div 
+                    onClick={() => {
+                      const input = document.createElement('input');
+                      input.type = 'file';
+                      input.accept = 'image/*';
+                      input.onchange = (e: any) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (re) => {
+                            const base64 = re.target?.result as string;
+                            const newMethods = [...settings.paymentMethods];
+                            newMethods[idx] = { ...method, logo: base64 };
+                            onUpdateSettings({ ...settings, paymentMethods: newMethods });
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      };
+                      input.click();
+                    }}
+                    className="w-full h-24 bg-[#05070A] border-2 border-dashed border-blue-500/20 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-blue-500/40 hover:bg-blue-500/5 transition-all group overflow-hidden relative"
+                  >
+                    {method.logo ? (
+                      <>
+                        <img src={method.logo} className="h-full w-full object-contain p-4 group-hover:opacity-40 transition-opacity" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                          <Upload className="w-6 h-6 text-white" />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="w-6 h-6 text-blue-500/40 group-hover:text-blue-500" />
+                        <span className="text-[10px] text-blue-500/40 font-bold uppercase tracking-widest group-hover:text-blue-500">Upload Logo</span>
+                      </>
+                    )}
+                  </div>
+
+                  <input
+                    type="text"
+                    value={method.logo}
+                    onChange={(e) => {
+                      const newMethods = [...settings.paymentMethods];
+                      newMethods[idx] = { ...method, logo: e.target.value };
+                      onUpdateSettings({ ...settings, paymentMethods: newMethods });
+                    }}
+                    placeholder="Or paste image URL"
+                    className="w-full bg-[#05070A] border border-blue-500/10 rounded-lg py-1 px-3 text-[10px] text-white/40 focus:outline-none focus:border-blue-500/50"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </motion.div>
   );
