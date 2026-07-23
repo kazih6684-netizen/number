@@ -1,0 +1,30 @@
+{
+  "entities": {
+    "notifications": {
+      "title": "Notifications",
+      "description": "Real-time payment and activation notifications across all devices",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "position": { "type": "string" },
+        "timestamp": { "type": "number" }
+      },
+      "required": ["message", "timestamp"]
+    },
+    "settings": {
+      "title": "AppSettings",
+      "description": "Global settings shared across devices",
+      "type": "object",
+      "properties": {
+        "paymentMethod": { "type": "string" },
+        "amount": { "type": "string" },
+        "senderNumber": { "type": "string" },
+        "isTimerActive": { "type": "boolean" },
+        "showLiveIntelligence": { "type": "boolean" },
+        "autoPayment": { "type": "object" }
+      }
+    }
+  }
+}
