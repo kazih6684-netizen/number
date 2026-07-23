@@ -34,4 +34,5 @@ export interface AppSettings {
     methodPattern: 'alternating' | 'random';
   };
   paymentMethods: PaymentMethodInfo[];
+  customPosterImage?: string;
 }

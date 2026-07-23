@@ -53,20 +53,47 @@ export default function SettingsPanel({
 
       <div className="flex flex-col gap-6 overflow-y-auto pr-2 custom-scrollbar">
         <section className="space-y-4">
-          <h3 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] opacity-80">Media Asset</h3>
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            className="w-full flex items-center gap-4 bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/10 p-4 rounded-xl transition-all group text-left"
-          >
-            <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(59,130,246,0.3)]">
-              <Upload className="w-5 h-5" />
+          <h3 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] opacity-80">Media Asset (Poster)</h3>
+          
+          {settings.customPosterImage ? (
+            <div className="space-y-3">
+              <div className="relative group w-full h-32 bg-blue-500/5 border border-blue-500/20 rounded-xl overflow-hidden shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                <img 
+                  src={settings.customPosterImage} 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                  alt="Saved Poster"
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                   <button 
+                    onClick={() => fileInputRef.current?.click()}
+                    className="p-2 bg-blue-500 rounded-full text-white shadow-lg hover:scale-110 transition-transform"
+                   >
+                     <Upload className="w-5 h-5" />
+                   </button>
+                </div>
+              </div>
+              <button
+                onClick={() => onUpdateSettings({ ...settings, customPosterImage: '' })}
+                className="w-full py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all"
+              >
+                Reset to Default Poster
+              </button>
             </div>
-            <div className="flex flex-col">
-              <span className="text-white font-medium text-sm text-nowrap">Upload Asset</span>
-              <span className="text-blue-400/30 text-[10px]">Select image for dashboard</span>
-            </div>
-            <ChevronRight className="w-4 h-4 text-blue-400/20 ml-auto" />
-          </button>
+          ) : (
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full flex items-center gap-4 bg-blue-500/5 hover:bg-blue-500/10 border border-blue-500/10 p-4 rounded-xl transition-all group text-left"
+            >
+              <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400 group-hover:scale-110 transition-transform shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+                <Upload className="w-5 h-5" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-white font-medium text-sm text-nowrap">Upload Custom Poster</span>
+                <span className="text-blue-400/30 text-[10px]">Overrides generated UI</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-blue-400/20 ml-auto" />
+            </button>
+          )}
         </section>
 
         <section className="space-y-4">

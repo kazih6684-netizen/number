@@ -13,12 +13,9 @@ import { Notification, ViewState, AppSettings } from './types';
 
 // Image paths from generation
 const BG_IMAGE = '/src/assets/images/corporate_office_bg_1784667973671.jpg';
-const POSTER_IMAGE = '/src/assets/images/payment_methods_poster_1784667989895.jpg';
 
 export default function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [viewState, setViewState] = useState<ViewState>('poster');
-  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -124,6 +121,7 @@ export default function App() {
       { name: 'Upay', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/U/upay-logo-F2B8D24F3A-seeklogo.com.png', color: '#FFD700' },
       { name: 'Tap', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/T/tap-logo-8A1C4C5C5C-seeklogo.com.png', color: '#00A1E1' },
     ],
+    customPosterImage: '',
   });
 
   // Dynamic Intelligence Metrics State
@@ -188,9 +186,12 @@ export default function App() {
     setIsUploading(true);
     const reader = new FileReader();
     reader.onload = (e) => {
+      const base64 = e.target?.result as string;
       setTimeout(() => {
-        setUploadedImageUrl(e.target?.result as string);
-        setViewState('uploaded');
+        handleUpdateSettings({
+          ...settings,
+          customPosterImage: base64
+        });
         setIsUploading(false);
         setIsSettingsOpen(false);
       }, 1200);
@@ -507,7 +508,7 @@ export default function App() {
                     </motion.div>
                   ) : (
                     <motion.div
-                      key={viewState}
+                      key={settings.customPosterImage ? 'custom' : 'default'}
                       initial={{ scale: 0.95, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
@@ -517,14 +518,13 @@ export default function App() {
                         {/* Dramatic Ambient Glow behind image */}
                         <div className="absolute inset-0 bg-orange-500/5 blur-[200px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1500" />
                         
-                        {viewState === 'poster' ? (
+                        {(!settings.customPosterImage) ? (
                           <div className="w-full h-full max-w-[98%] max-h-[98%] flex items-center justify-center drop-shadow-[0_60px_120px_rgba(0,0,0,0.8)]">
                             <PaymentPoster settings={settings} />
                           </div>
                         ) : (
-
                           <img
-                            src={viewState === 'uploaded' && uploadedImageUrl ? uploadedImageUrl : POSTER_IMAGE}
+                            src={settings.customPosterImage}
                             alt="Interface Node"
                             className="max-w-full max-h-full w-auto h-auto object-contain rounded-[32px] md:rounded-[40px] shadow-[0_100px_200px_-50px_rgba(0,0,0,1),0_0_60px_rgba(59,130,246,0.15)] border border-white/[0.03] transition-all duration-1000 group-hover:scale-[1.015] group-hover:border-blue-500/30"
                             referrerPolicy="no-referrer"
