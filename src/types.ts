@@ -35,4 +35,8 @@ export interface AppSettings {
   };
   paymentMethods: PaymentMethodInfo[];
   customPosterImage?: string;
+  admissionFee?: {
+    show: boolean;
+    amount: 599 | 499;
+  };
 }

@@ -124,6 +124,10 @@ export default function App() {
       { name: 'Tap', number: '01XXXXXXXXX', logo: 'https://seeklogo.com/images/T/tap-logo-8A1C4C5C5C-seeklogo.com.png', color: '#00A1E1' },
     ],
     customPosterImage: '',
+    admissionFee: {
+      show: true,
+      amount: 599,
+    },
   });
 
   // Dynamic Intelligence Metrics State
@@ -465,7 +469,7 @@ export default function App() {
               </div>
 
               {/* Central Main Display - Expands wide in middle dark space */}
-              <div className="flex-1 relative flex items-center justify-center p-2 md:p-4 bg-gradient-to-br from-blue-900/[0.03] to-transparent overflow-hidden">
+              <div className="flex-1 relative flex items-center justify-center p-2 md:p-4 bg-gradient-to-br from-blue-900/[0.03] to-transparent overflow-visible">
                 
                 {/* Left Notifications Layer - Higher z-index, positioned above methods */}
                 <div className="absolute left-2 top-4 z-[100] flex flex-col gap-2 pointer-events-none w-64">
@@ -574,6 +578,29 @@ export default function App() {
       <div className="fixed top-4 left-4 z-[200]">
         <CountdownTimer isActive={settings.isTimerActive} />
       </div>
+
+      {/* Admission Fee Banner - Compact & Floating */}
+      {settings.admissionFee?.show && (
+        <div className="absolute top-10 left-0 w-full flex justify-center z-[9999] pointer-events-none">
+          <motion.div
+            animate={{ 
+              opacity: [1, 0.7, 1],
+              scale: [1, 1.03, 1],
+            }}
+            transition={{ 
+              duration: 2, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+            className="flex items-center gap-3 px-8 py-2.5 bg-black/80 backdrop-blur-2xl border-2 border-orange-500 rounded-full shadow-[0_0_40px_rgba(249,115,22,0.4),inset_0_0_15px_rgba(249,115,22,0.2)]"
+          >
+            <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_15px_rgba(249,115,22,1)] animate-pulse" />
+            <span className="text-xl md:text-3xl font-black text-white uppercase tracking-tight italic">
+              Admission Fee: <span className="text-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.6)]">{settings.admissionFee.amount}৳</span>
+            </span>
+          </motion.div>
+        </div>
+      )}
     </main>
   );
 }

@@ -95,6 +95,44 @@ const SettingsPanel = memo(({
             </button>
           )}
         </section>
+        
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] opacity-80">Admission Fee</h3>
+            <button 
+              onClick={() => onUpdateSettings({ 
+                ...settings, 
+                admissionFee: { ...settings.admissionFee!, show: !settings.admissionFee?.show } 
+              })}
+              className={`w-10 h-5 rounded-full transition-all relative ${settings.admissionFee?.show ? 'bg-blue-500' : 'bg-white/10'}`}
+            >
+              <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${settings.admissionFee?.show ? 'right-1' : 'left-1'}`} />
+            </button>
+          </div>
+
+          {settings.admissionFee?.show && (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                {[599, 499].map((val) => (
+                  <button
+                    key={val}
+                    onClick={() => onUpdateSettings({ 
+                      ...settings, 
+                      admissionFee: { ...settings.admissionFee!, amount: val as 599 | 499 } 
+                    })}
+                    className={`flex-1 py-2 rounded-lg text-[10px] font-bold transition-all border ${
+                      settings.admissionFee?.amount === val 
+                        ? 'bg-blue-500 text-white border-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.4)]' 
+                        : 'bg-white/5 text-white/60 border-white/10 hover:bg-white/10'
+                    }`}
+                  >
+                    {val}৳
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </section>
 
         <section className="space-y-4">
           <h3 className="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em] opacity-80">Payment Config</h3>
