@@ -1,15 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, lazy, Suspense, memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Settings, Wifi, Battery, Sparkles } from 'lucide-react';
 import { collection, addDoc, onSnapshot, query, orderBy, limit, doc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './lib/firebase';
-import SettingsPanel from './components/SettingsPanel';
-import NotificationManager from './components/NotificationManager';
-import CountdownTimer from './components/CountdownTimer';
-import AtmosphericEffects from './components/AtmosphericEffects';
-import RightSidebar from './components/RightSidebar';
-import PaymentPoster from './components/PaymentPoster';
 import { Notification, ViewState, AppSettings } from './types';
+
+// Lazy load components
+const SettingsPanel = lazy(() => import('./components/SettingsPanel'));
+const NotificationManager = memo(lazy(() => import('./components/NotificationManager')));
+const CountdownTimer = memo(lazy(() => import('./components/CountdownTimer')));
+const AtmosphericEffects = memo(lazy(() => import('./components/AtmosphericEffects')));
+const RightSidebar = memo(lazy(() => import('./components/RightSidebar')));
+const PaymentPoster = memo(lazy(() => import('./components/PaymentPoster')));
 
 // Image paths from generation
 const BG_IMAGE = '/src/assets/images/corporate_office_bg_1784667973671.jpg';
@@ -254,6 +256,7 @@ export default function App() {
             x: [-30, 30, -30],
           }}
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: 'transform, opacity' }}
           className="absolute -top-[10%] -left-[5%] w-[90%] h-[90%] bg-blue-600/30 rounded-full blur-[200px]"
         />
         <motion.div
@@ -263,6 +266,7 @@ export default function App() {
             x: [50, -50, 50],
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: 'transform, opacity' }}
           className="absolute -bottom-[15%] -right-[10%] w-[80%] h-[80%] bg-indigo-600/20 rounded-full blur-[180px]"
         />
 
@@ -520,12 +524,15 @@ export default function App() {
                         
                         {(!settings.customPosterImage) ? (
                           <div className="w-full h-full max-w-[98%] max-h-[98%] flex items-center justify-center drop-shadow-[0_60px_120px_rgba(0,0,0,0.8)]">
-                            <PaymentPoster settings={settings} />
+                            <Suspense fallback={<div className="w-full h-full animate-pulse bg-blue-500/5 rounded-3xl" />}>
+                              <PaymentPoster settings={settings} />
+                            </Suspense>
                           </div>
                         ) : (
                           <img
                             src={settings.customPosterImage}
                             alt="Interface Node"
+                            loading="lazy"
                             className="max-w-full max-h-full w-auto h-auto object-contain rounded-[32px] md:rounded-[40px] shadow-[0_100px_200px_-50px_rgba(0,0,0,1),0_0_60px_rgba(59,130,246,0.15)] border border-white/[0.03] transition-all duration-1000 group-hover:scale-[1.015] group-hover:border-blue-500/30"
                             referrerPolicy="no-referrer"
                           />
@@ -547,14 +554,18 @@ export default function App() {
             </div>
 
             {/* Global Settings Panel Overlay */}
-            <SettingsPanel 
-              isOpen={isSettingsOpen} 
-              onClose={() => setIsSettingsOpen(false)}
-              onUpload={handleUpload}
-              onPaymentAction={handlePaymentAction}
-              settings={settings}
-              onUpdateSettings={handleUpdateSettings}
-            />
+            <Suspense fallback={null}>
+              {isSettingsOpen && (
+                <SettingsPanel 
+                  isOpen={isSettingsOpen} 
+                  onClose={() => setIsSettingsOpen(false)}
+                  onUpload={handleUpload}
+                  onPaymentAction={handlePaymentAction}
+                  settings={settings}
+                  onUpdateSettings={handleUpdateSettings}
+                />
+              )}
+            </Suspense>
           </div>
         </motion.div>
       </div>

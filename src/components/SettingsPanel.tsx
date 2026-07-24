@@ -1,6 +1,6 @@
-import React, { motion } from 'motion/react';
+import React, { memo, useRef } from 'react';
+import { motion } from 'motion/react';
 import { Upload, Link as LinkIcon, ChevronRight, X, CreditCard, Phone, DollarSign } from 'lucide-react';
-import { useRef } from 'react';
 import { AppSettings, PaymentMethod } from '../types';
 
 interface SettingsPanelProps {
@@ -12,14 +12,14 @@ interface SettingsPanelProps {
   onUpdateSettings: (settings: AppSettings) => void;
 }
 
-export default function SettingsPanel({ 
+const SettingsPanel = memo(({ 
   isOpen, 
   onClose, 
   onUpload, 
   onPaymentAction,
   settings,
   onUpdateSettings
-}: SettingsPanelProps) {
+}: SettingsPanelProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: any) => {
@@ -375,4 +375,6 @@ export default function SettingsPanel({
       </div>
     </motion.div>
   );
-}
+});
+
+export default SettingsPanel;

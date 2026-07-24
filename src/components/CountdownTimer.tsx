@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { motion } from 'motion/react';
 import { Timer as TimerIcon } from 'lucide-react';
 
@@ -6,7 +6,7 @@ interface CountdownTimerProps {
   isActive: boolean;
 }
 
-export default function CountdownTimer({ isActive }: CountdownTimerProps) {
+const CountdownTimer = memo(({ isActive }: CountdownTimerProps) => {
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour in seconds
 
   useEffect(() => {
@@ -99,4 +99,6 @@ export default function CountdownTimer({ isActive }: CountdownTimerProps) {
       </div>
     </motion.div>
   );
-}
+});
+
+export default CountdownTimer;

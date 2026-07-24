@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 
-export default function AtmosphericEffects() {
+const AtmosphericEffects = memo(() => {
   const stars = Array.from({ length: 120 });
   const nebulas = Array.from({ length: 4 });
   const glimmers = Array.from({ length: 20 });
@@ -116,4 +116,6 @@ export default function AtmosphericEffects() {
       ))}
     </div>
   );
-}
+});
+
+export default AtmosphericEffects;

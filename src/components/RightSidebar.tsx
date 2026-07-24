@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Activity, Shield, Globe, Cpu, Users, UserCheck, Mic } from 'lucide-react';
 
@@ -11,7 +11,7 @@ interface RightSidebarProps {
   };
 }
 
-export default function RightSidebar({ enabled, metrics }: RightSidebarProps) {
+const RightSidebar = memo(({ enabled, metrics }: RightSidebarProps) => {
   if (!enabled) {
     return (
       <div className="w-12 bg-blue-900/5 border-l border-blue-500/10 flex flex-col items-center py-10 gap-8 hidden xl:flex">
@@ -117,9 +117,11 @@ export default function RightSidebar({ enabled, metrics }: RightSidebarProps) {
       </div>
     </div>
   );
-}
+});
 
-function MetricItem({ icon, label, value, status, color }: any) {
+export default RightSidebar;
+
+const MetricItem = memo(({ icon, label, value, status, color }: any) => {
   return (
     <div className="bg-blue-900/10 border border-blue-500/10 p-3 rounded-2xl flex flex-col gap-2 relative group hover:border-blue-400/30 transition-all">
       <div className="flex items-center justify-between">
@@ -144,4 +146,4 @@ function MetricItem({ icon, label, value, status, color }: any) {
       </div>
     </div>
   );
-}
+});

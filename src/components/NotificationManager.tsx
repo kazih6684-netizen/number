@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2, PartyPopper, X } from 'lucide-react';
 import { Notification } from '../types';
@@ -9,7 +9,7 @@ interface NotificationManagerProps {
   position?: 'left' | 'right' | 'center' | 'all';
 }
 
-export default function NotificationManager({ notifications, removeNotification, position = 'all' }: NotificationManagerProps) {
+const NotificationManager = memo(({ notifications, removeNotification, position = 'all' }: NotificationManagerProps) => {
   const filteredNotifications = position === 'all' 
     ? notifications 
     : notifications.filter(n => n.position === position);
@@ -28,7 +28,9 @@ export default function NotificationManager({ notifications, removeNotification,
       </AnimatePresence>
     </div>
   );
-}
+});
+
+export default NotificationManager;
 
 interface NotificationItemProps {
   key?: string;
@@ -37,7 +39,7 @@ interface NotificationItemProps {
   position?: 'left' | 'right' | 'center' | 'all';
 }
 
-function NotificationItem({ notif, onRemove, position = 'center' }: NotificationItemProps) {
+const NotificationItem = memo(({ notif, onRemove, position = 'center' }: NotificationItemProps) => {
   const initialX = position === 'right' ? 40 : position === 'left' ? -40 : 0;
   
   // Auto-remove after 30 seconds
@@ -152,4 +154,4 @@ function NotificationItem({ notif, onRemove, position = 'center' }: Notification
       </div>
     </motion.div>
   );
-}
+});
